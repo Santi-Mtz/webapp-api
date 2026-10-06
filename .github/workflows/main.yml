@@ -1,0 +1,88 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: 🧪 Run Tests & Code Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests & Check Coverage Threshold
+        run: npm test
+
+  build-and-push:
+    name: 🐳 Build & Push Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Extract Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_HUB_USERNAME }}/webapp
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+  deploy:
+    name: 🚀 Deploy to AWS EC2
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Deploy via SSH to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Pulling latest image..."
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/webapp:latest
+            echo "Stopping old container..."
+            sudo docker stop webapp-prod || true
+            sudo docker rm webapp-prod || true
+            echo "Starting new container..."
+            sudo docker run -d --name webapp-prod \
+              -p 80:80 \
+              -p 6061:6061 \
+              --restart always \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/webapp:latest
+            echo "Container successfully deployed!"
+            sudo docker ps

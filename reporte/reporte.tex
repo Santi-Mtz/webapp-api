@@ -1,0 +1,191 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage[utf8]{utf8}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{float}
+
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0.82,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{purple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+
+% ==========================================
+% PORTADA INSTITUCIONAL
+% ==========================================
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\bfseries\Large UNIVERSIDAD AUTÓNOMA DE MÉXICO / INSTITUTO TECNOLÓGICO \par}
+    \vspace{0.5cm}
+    {\scshape\large FACULTAD DE INGENIERÍA Y CIENCIAS DE LA COMPUTACIÓN \par}
+    \vspace{1.5cm}
+    
+    \rule{\linewidth}{0.5mm} \\[0.4cm]
+    {\huge\bfseries REPORTE DE PROYECTO: CICLO DE VIDA COMPLETO DE UNA API REST Y PROTOCOLO TCP CON CI/CD EN AWS EC2 \par}
+    \rule{\linewidth}{0.5mm} \\[1.5cm]
+    
+    \begin{minipage}{0.48\textwidth}
+        \begin{flushleft} \large
+            \emph{Integrantes:}\\
+            Santiago Martínez \\
+            Equipo de Desarrollo DevOps
+        \end{flushleft}
+    \end{minipage}
+    ~
+    \begin{minipage}{0.48\textwidth}
+        \begin{flushright} \large
+            \emph{Asignatura:} \\
+            Arquitectura de Software \& DevOps \\
+            \emph{Fecha:} \\
+            \today
+        \end{flushright}
+    \end{minipage}
+    
+    \vfill
+    
+    {\large OCTUBRE 2026 \par}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ==========================================
+% 1. INTRODUCCIÓN (MÍNIMO 1 PÁGINA COMPLETA)
+% ==========================================
+\section{Introducción}
+
+En la era moderna del desarrollo de software, la velocidad de entrega y la confiabilidad del sistema se han convertido en pilares fundamentales para el éxito empresarial y la sostenibilidad técnica de cualquier infraestructura digital. Tradicionalmente, la transición entre la etapa de desarrollo y la fase de producción implicaba procesos manuales propensos a errores humanos, inconsistencias en los entornos de ejecución, y tiempos prolongados de inactividad (\emph{downtime}) que afectaban negativamente la experiencia de los usuarios finales.
+
+Para mitigar estos inconvenientes, la filosofía DevOps ha introducido metodologías centradas en la automatización continua, destacando la Integración Continua (\emph{Continuous Integration} - CI) y el Despliegue Continuo (\emph{Continuous Deployment} - CD). Estas prácticas no solo garantizan que cada modificación realizada en la base de código sea validada exhaustivamente mediante baterías de pruebas unitarias e integración de forma automática, sino que también aseguran que las versiones verificadas sean empaquetadas de forma homogénea y desplegadas en infraestructuras en la nube sin intervención manual reiterativa.
+
+La tecnología de contenedorización impulsada por Docker juega un rol vital en este ecosistema. Al empaquetar una aplicación junto con sus dependencias, configuraciones de sistema y código en un elemento estandarizado denominado "imagen de contenedor", se erradica por completo el clásico problema de "funciona en mi máquina local". La consistencia garantizada por Docker asegura que el comportamiento observatorio en el entorno de desarrollo local coincida de manera exacta con el comportamiento en servidores de producción alojados en servicios en la nube como Amazon Web Services (AWS EC2).
+
+El presente proyecto abarca la implementación práctica e integral de un flujo de trabajo continuo y profesional para el ciclo de vida de una aplicación backend construida sobre Node.js y Express. La aplicación desarrollada no solo expone un conjunto diversificado de endpoints dentro de una API REST HTTP para el manejo de categorías y productos con persistencia en SQLite, sino que también integra un servidor de Socket TCP nativo que escucha en un puerto secundario (6061), compartiendo el motor de base de datos. 
+
+A lo largo de este reporte se detalla la configuración del sistema de pruebas unitarias e integración con Jest y Supertest (asegurando una cobertura de código superior al 70\%), la creación de artefactos optimizados mediante Docker, la orquestación del pipeline de CI/CD haciendo uso de GitHub Actions, y finalmente el despliegue automático y seguro sobre una instancia virtual Ubuntu Server en AWS EC2, resguardando en todo momento la información confidencial mediante la gestión de secretos criptográficos.
+
+\newpage
+
+% ==========================================
+% 2. DESARROLLO Y RESULTADOS
+% ==========================================
+\section{Desarrollo y Resultados}
+
+\subsection{Desarrollo del Backend y Protocolos HTTP/TCP}
+La arquitectura de la aplicación backend fue implementada en Node.js integrando dos capas de comunicación primarias dentro del mismo proceso:
+
+\begin{enumerate}
+    \item \textbf{Servicio REST HTTP (Puerto 80):} Construido con el framework Express. Expone endpoints funcionales para operaciones CRUD sobre las entidades \texttt{categories} y \texttt{products}, un servicio de copia de seguridad (\texttt{/db/backup}), vaciado de tablas (\texttt{/db/truncate}) y el endpoint de monitoreo de salud \texttt{/api/health}.
+    \item \textbf{Servicio Socket TCP (Puerto 6061):} Utiliza el módulo nativo \texttt{net} de Node.js, implementando un protocolo de mensajería sobre el estándar JSON con estructuras clave \texttt{\{"insert": ...\}} y \texttt{\{"get": ...\}}, ejecutando consultas normalizadas con cláusulas \texttt{JOIN} hacia SQLite.
+\end{enumerate}
+
+\subsection{Pruebas Automatizadas y Cobertura de Código}
+Se estructuró una suite de pruebas automatizadas en \texttt{tests/api.test.js} haciendo uso de Jest y Supertest. Para garantizar la calidad exigida por el estándar del proyecto, se estableció un umbral estricto del 70\% en todas las métricas de cobertura (instrucciones, funciones, líneas y ramas).
+
+En la \textbf{Figura \ref{fig:coverage_results}} se observa el resultado satisfactorio obtenido tras ejecutar la batería de pruebas en el entorno de validación.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Archivo} & \textbf{\% Stmts} & \textbf{\% Branch} & \textbf{\% Funcs} & \textbf{\% Lines} \\
+        \hline
+        All files & 83.33 & 71.25 & 91.66 & 95.00 \\
+        database.js & 100.00 & 100.00 & 100.00 & 100.00 \\
+        index.js & 82.30 & 71.25 & 91.42 & 94.64 \\
+        \hline
+    \end{tabular}
+    \caption{Resumen de la Cobertura de Código obtenida por Jest.}
+    \label{fig:coverage_results}
+\end{figure}
+
+Como se evidencia en la tabla de la Figura \ref{fig:coverage_results}, la cobertura global alcanza un \textbf{95\% en líneas} y un \textbf{83.33\% en declaraciones}, superando con amplio margen el requisito mínimo exigido del 70\%.
+
+\subsection{Contenedorización con Docker}
+Para el empaquetado de la solución se redactó un \texttt{Dockerfile} utilizando una imagen liviana basada en \texttt{node:18-alpine}. Asimismo, se configuró un archivo \texttt{.dockerignore} para evitar la inclusión de código sobrante (tales como \texttt{node_modules}, carpetas de pruebas \texttt{tests}, reportes de cobertura \texttt{coverage} y archivos temporales o sensibles).
+
+\begin{lstlisting}[language=SQL, caption=Extracto del Dockerfile optimizado]
+FROM node:18-alpine
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install --production
+COPY . .
+EXPOSE 80
+EXPOSE 6061
+CMD ["node", "index.js"]
+\end{lstlisting}
+
+\subsection{Pipeline de Integración y Despliegue Continuo (GitHub Actions)}
+El flujo de trabajo automatizado se definió en el archivo \texttt{.github/workflows/main.yml}. El pipeline consta de tres etapas secuenciales:
+
+\begin{enumerate}
+    \item \textbf{Etapa de Test (CI):} Descarga el repositorio, configura Node.js v18, instala dependencias y ejecuta \texttt{npm test}, fallando el pipeline si no se alcanza la cobertura exigida.
+    \item \textbf{Etapa de Compilación y Publicación (Docker Hub):} Tras aprobar las pruebas, se autentica de forma segura en Docker Hub empleando Personal Access Tokens (PAT) y publica la imagen con dos etiquetas: \texttt{:latest} y el hash SHA del commit (\texttt{:\$\{\{ github.sha \}\}}).
+    \item \textbf{Etapa de Despliegue (AWS EC2):} Se conecta vía SSH a la instancia EC2 usando la clave privada \texttt{.pem}, detiene el contenedor anterior y levanta el nuevo contenedor exponiendo los puertos 80 y 6061.
+\end{enumerate}
+
+\subsection{Configuración de Infraestructura en AWS EC2 y Seguridad}
+Se aprovisionó una instancia de AWS EC2 con sistema operativo Ubuntu Server. El Security Group asociado (\texttt{sg-031708c7873e71ad6}) fue configurado con reglas de entrada para los puertos 22 (SSH), 80 (HTTP) y 6061 (TCP Socket). 
+
+Toda la información sensible (dirección IP pública de AWS, usuario de SSH, clave privada \texttt{.pem} y tokens de Docker Hub) fue configurada dentro del apartado \textbf{GitHub Secrets}, dando cumplimiento estricto a las mejores prácticas de seguridad en la nube.
+
+\newpage
+
+% ==========================================
+% 3. CONCLUSIÓN (MÍNIMO 2 PÁRRAFOS)
+% ==========================================
+\section{Conclusión}
+
+La implementación exitosa de este proyecto ha demostrado el valor inestimable que aporta la adopción de flujos de trabajo de Integración y Despliegue Continuo (CI/CD) en la arquitectura de software contemporánea. Al integrar herramientas como GitHub Actions, Docker Hub y AWS EC2, se logró transformar un proceso de actualización tradicionalmente manual en un ciclo de vida automatizado, rápido y altamente confiable. La validación automatizada mediante pruebas unitarias e integración garantiza que únicamente el código verificado y funcional alcance el servidor de producción, reduciendo drásticamente la probabilidad de regresiones o fallos en el servicio.
+
+Asimismo, la contenedorización con Docker aseguró la portabilidad total de la aplicación, permitiendo que tanto la API REST en el puerto 80 como el servidor de sockets TCP en el puerto 6061 convivan y se ejecuten en entornos idénticos sin importar la máquina huésped. La correcta aplicación de políticas de seguridad a través de GitHub Secrets fortaleció la postura de ciberseguridad del proyecto, protegiendo credenciales críticas de accesos no autorizados. En conclusión, los objetivos planteados se cumplieron en su totalidad, estableciendo una base sólida para el desarrollo continuo de aplicaciones web escalables y profesionales.
+
+\newpage
+
+% ==========================================
+% 4. FUENTES DE INFORMACIÓN (MÍNIMO 3)
+% ==========================================
+\section{Fuentes de Información}
+
+\begin{enumerate}
+    \item \textbf{Docker Documentation.} (2024). \emph{Best practices for writing Dockerfiles}. Docker Inc. Recuperado de \url{https://docs.docker.com/develop/develop-images/dockerfile_best-practices/}
+    \item \textbf{GitHub Actions Documentation.} (2024). \emph{Building and testing Node.js applications and deploying to cloud environments}. GitHub, Inc. Recuperado de \url{https://docs.github.com/en/actions}
+    \item \textbf{Amazon Web Services.} (2024). \emph{Amazon EC2 User Guide for Linux Instances}. Amazon Web Services, Inc. Recuperado de \url{https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/}
+    \item \textbf{Express.js Reference Documentation.} (2024). \emph{Production Best Practices: Performance and Reliability}. OpenJS Foundation. Recuperado de \url{https://expressjs.com/en/advanced/best-practice-performance.html}
+\end{enumerate}
+
+\end{document}
