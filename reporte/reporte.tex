@@ -257,20 +257,8 @@ jobs:
             sudo docker run -d --name webapp-prod -p 80:80 -p 6061:6061 --restart always ${{ secrets.DOCKER_HUB_USERNAME }}/webapp:latest
 \end{lstlisting}
 
-\subsection{Guía y Pasos para la Demostración Práctica en Vivo}
-Para evidenciar el funcionamiento continuo y automatizado del pipeline frente a evaluadores o docentes, se estructuró el siguiente protocolo de demostración práctica:
-
-\begin{enumerate}
-    \item \textbf{Modificación de Código:} Realizar un cambio puntual en el backend (por ejemplo, actualizar el mensaje retornado en el endpoint \texttt{GET /api/health} dentro de \texttt{index.js}).
-    \item \textbf{Publicación en Git:} Ejecutar el commit y el envío a la rama principal:
-    \begin{lstlisting}[language=bash]
-git add .
-git commit -m "demo: actualizacion en vivo de la API"
-git push origin main
-    \end{lstlisting}
-    \item \textbf{Monitoreo en Tiempo Real:} Abrir la pestaña \textbf{Actions} en el repositorio de GitHub (\url{https://github.com/Santi-Mtz/webapp-api/actions}) para observar la ejecución secuencial de los trabajos de prueba, empaquetado y despliegue.
-    \item \textbf{Verificación en la Nube:} Consultar directamente en el navegador la URL pública de la instancia AWS EC2 (\url{http://3.23.64.95/api/health}) para comprobar que la API se actualizó automáticamente sin tiempo de inactividad.
-\end{enumerate}
+\subsection{Verificación y Validación del Despliegue en Vivo}
+El funcionamiento continuo y automatizado del pipeline puede ser comprobado directamente en la consola de GitHub Actions y mediante la consulta de los endpoints públicos. Al realizar cualquier modificación en la base de código del repositorio y enviarla a la rama principal, la canalización de CI/CD ejecuta secuencialmente la validación de pruebas unitarias, el empaquetado del contenedor y la actualización del servidor en la nube AWS EC2 (\url{http://3.23.64.95/api/health}), evidenciando un ciclo de despliegue automatizado sin tiempo de inactividad.
 
 \newpage
 
