@@ -39,7 +39,7 @@ beforeEach((done) => {
 // Helper para clientes TCP
 function sendTcpMessage(messageObject) {
   return new Promise((resolve, reject) => {
-    const client = net.createConnection({ port: TEST_TCP_PORT }, () => {
+    const client = net.createConnection({ port: TEST_TCP_PORT, host: '127.0.0.1' }, () => {
       client.write(JSON.stringify(messageObject) + '\n');
     });
 
