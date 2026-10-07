@@ -302,57 +302,17 @@ Asimismo, la contenedorización mediante Docker y el despliegue automático haci
 \newpage
 
 % ==========================================
-% 4. ANEXOS: DIAGRAMAS Y MODELOS CONCEPTUALES
+% 4. ANEXOS
 % ==========================================
-\section{Anexos: Diagramas y Modelos Conceptuales}
+\section{Anexos}
 
-A continuación se presentan los esquemas gráficos del flujo de arquitectura y los componentes implementados en la práctica.
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[node distance=1.2cm, auto, >=Stealth, every node/.style={rectangle, draw, fill=orange!15, text width=2.2cm, text centered, rounded corners, font=\scriptsize}]
-        \node (commit) {1. Commit de Código};
-        \node (build) [right=of commit] {2. Pruebas \& Cobertura};
-        \node (test) [right=of build] {3. Build Docker Image};
-        \node (staging) [right=of test] {4. Push a Docker Hub};
-        \node (prod) [right=of staging] {5. Deploy SSH EC2};
-        
-        \draw[->, thick] (commit) -- (build);
-        \draw[->, thick] (build) -- (test);
-        \draw[->, thick] (test) -- (staging);
-        \draw[->, thick] (staging) -- (prod);
-    \end{tikzpicture}
-    \caption{Fases del flujo de trabajo secuencial en la canalización CI/CD de GitHub Actions.}
-    \label{fig:cicd_pipeline}
-\end{figure}
+A continuación se presenta la evidencia del historial de ejecuciones en la consola de GitHub Actions correspondiente a la práctica.
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \begin{tikzpicture}[node distance=0.8cm, auto, every node/.style={rectangle, draw, fill=blue!10, text width=3.5cm, text centered, rounded corners, minimum height=0.6cm, font=\small}]
-            \node (hw) {Hardware Físico (Host)};
-            \node (os) [above=of hw] {Sistema Operativo Host};
-            \node (hyp) [above=of os] {Hipervisor (Tipo 2)};
-            \node (vma) [above left=0.5cm and -0.8cm of hyp, text width=1.6cm] {Guest OS\\App A};
-            \node (vmb) [above right=0.5cm and -0.8cm of hyp, text width=1.6cm] {Guest OS\\App B};
-        \end{tikzpicture}
-        \caption{Máquinas Virtuales}
-    \end{subfigure}
-    ~
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \begin{tikzpicture}[node distance=0.8cm, auto, every node/.style={rectangle, draw, fill=green!10, text width=3.5cm, text centered, rounded corners, minimum height=0.6cm, font=\small}]
-            \node (hw) {Hardware Físico (Host)};
-            \node (os) [above=of hw] {Sistema Operativo Host};
-            \node (doc) [above=of os] {Motor Docker};
-            \node (cnta) [above left=0.5cm and -0.8cm of doc, text width=1.6cm] {Libs/Deps\\App A};
-            \node (cntb) [above right=0.5cm and -0.8cm of doc, text width=1.6cm] {Libs/Deps\\App B};
-        \end{tikzpicture}
-        \caption{Contenedores}
-    \end{subfigure}
-    \caption{Comparación entre arquitecturas de Máquinas Virtuales y Contenedores Docker.}
-    \label{fig:vm_vs_containers}
+    \includegraphics[width=0.95\linewidth]{actions_list.png}
+    \caption{Historial de ejecuciones registradas en la consola de GitHub Actions para la canalización CI/CD.}
+    \label{fig:actions_list_screenshot}
 \end{figure}
 
 \end{document}
