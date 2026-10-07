@@ -13,6 +13,15 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning}
 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={Reporte de Practica DevOps UTEQ},
+    pdfpagemode=FullName,
+}
+
 \geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -194,6 +203,15 @@ Se estructuró el flujo de trabajo automatizado en \texttt{.github/workflows/mai
     \item \textbf{Deploy to AWS EC2:} Conecta mediante SSH a la instancia AWS EC2 (\texttt{3.23.64.95}), descarga la versión reciente desde Docker Hub, detiene el contenedor previo y levanta la nueva versión exponiendo los puertos 80 y 6061.
 \end{enumerate}
 
+En la Figura \ref{fig:github_actions_success} se ilustra la ejecución exitosa de la canalización de CI/CD completa registrada en la consola de GitHub Actions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{pipeline_success.png}
+    \caption{Ejecución exitosa del Pipeline CI/CD en GitHub Actions finalizada en verde.}
+    \label{fig:github_actions_success}
+\end{figure}
+
 \begin{lstlisting}[language=SQL, caption=Fragmento del Workflow CI/CD (.github/workflows/main.yml)]
 name: CI/CD Pipeline
 on:
@@ -258,20 +276,20 @@ Asimismo, la contenedorización mediante Docker y el despliegue automático haci
 \newpage
 
 % ==========================================
-% REFERENCIAS BIBLIOGRÁFICAS (9 FUENTES)
+% REFERENCIAS BIBLIOGRÁFICAS (AJUSTADAS)
 % ==========================================
 \section{Fuentes de Información}
 
 \begin{enumerate}
-    \item \textbf{Red Hat.} (2024). \emph{¿Qué es la infraestructura como código (IaC)?} Red Hat Automation Topics. Recuperado de \url{https://www.redhat.com/es/topics/automation/what-is-infrastructure-as-code-iac}
-    \item \textbf{Amazon Web Services (AWS).} (2024). \emph{¿Cuál es la diferencia entre los contenedores y las máquinas virtuales?} AWS Architecture Guides. Recuperado de \url{https://aws.amazon.com/es/compare/the-difference-between-containers-and-virtual-machines/}
-    \item \textbf{TechTarget.} (2023). \emph{Cloud Provisioning Definition and Delivery Models}. SearchITChannel. Recuperado de \url{https://www.techtarget.com/searchitchannel/definition/cloud-provisioning}
-    \item \textbf{Amazon Web Services (AWS).} (2024). \emph{¿Qué es la administración de la configuración?} AWS Cloud Best Practices. Recuperado de \url{https://aws.amazon.com/es/what-is/configuration-management/}
-    \item \textbf{Red Hat.} (2024). \emph{¿Qué es CI/CD?} Red Hat DevOps Topics. Recuperado de \url{https://www.redhat.com/es/topics/devops/what-is-ci-cd}
-    \item \textbf{IBM Corporation.} (2024). \emph{The Three Pillars of Observability}. IBM Think Insights. Recuperado de \url{https://www.ibm.com/mx-es/think/insights/observability-pillars}
-    \item \textbf{Docker Documentation.} (2024). \emph{Best practices for writing Dockerfiles}. Docker Inc. Recuperado de \url{https://docs.docker.com/develop/develop-images/dockerfile_best-practices/}
-    \item \textbf{GitHub Actions Documentation.} (2024). \emph{Building and testing Node.js applications and deploying to cloud environments}. GitHub, Inc. Recuperado de \url{https://docs.github.com/en/actions}
-    \item \textbf{Jest Testing Framework.} (2024). \emph{Anatomy of a Jest Testing Suite and Code Coverage Thresholds}. Meta Open Source. Recuperado de \url{https://jestjs.io/docs/configuration}
+    \item \textbf{Red Hat.} (2024). \emph{¿Qué es la infraestructura como código (IaC)?} Red Hat Automation Topics. Recuperado de: \url{https://www.redhat.com/es/topics/automation/what-is-infrastructure-as-code-iac}
+    \item \textbf{Amazon Web Services (AWS).} (2024). \emph{¿Cuál es la diferencia entre los contenedores y las máquinas virtuales?} AWS Architecture Guides. Recuperado de: \url{https://aws.amazon.com/es/compare/the-difference-between-containers-and-virtual-machines/}
+    \item \textbf{TechTarget.} (2023). \emph{Cloud Provisioning Definition and Delivery Models}. SearchITChannel. Recuperado de: \url{https://www.techtarget.com/searchitchannel/definition/cloud-provisioning}
+    \item \textbf{Amazon Web Services (AWS).} (2024). \emph{¿Qué es la administración de la configuración?} AWS Cloud Best Practices. Recuperado de: \url{https://aws.amazon.com/es/what-is/configuration-management/}
+    \item \textbf{Red Hat.} (2024). \emph{¿Qué es CI/CD?} Red Hat DevOps Topics. Recuperado de: \url{https://www.redhat.com/es/topics/devops/what-is-ci-cd}
+    \item \textbf{IBM Corporation.} (2024). \emph{The Three Pillars of Observability}. IBM Think Insights. Recuperado de: \url{https://www.ibm.com/mx-es/think/insights/observability-pillars}
+    \item \textbf{Docker Documentation.} (2024). \emph{Best practices for writing Dockerfiles}. Docker Inc. Recuperado de: \url{https://docs.docker.com/develop/develop-images/dockerfile_best-practices/}
+    \item \textbf{GitHub Actions Documentation.} (2024). \emph{Building and testing Node.js applications and deploying to cloud environments}. GitHub, Inc. Recuperado de: \url{https://docs.github.com/en/actions}
+    \item \textbf{Jest Testing Framework.} (2024). \emph{Anatomy of a Jest Testing Suite and Code Coverage Thresholds}. Meta Open Source. Recuperado de: \url{https://jestjs.io/docs/configuration}
 \end{enumerate}
 
 \newpage
