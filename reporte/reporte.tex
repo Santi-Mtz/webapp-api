@@ -3,6 +3,7 @@
 \usepackage[spanish]{babel}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{url}
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
@@ -12,15 +13,6 @@
 \usepackage{float}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning}
-
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,      
-    urlcolor=blue,
-    pdftitle={Reporte de Practica DevOps UTEQ},
-    pdfpagemode=FullName,
-}
 
 \geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
 
@@ -35,7 +27,7 @@
     keywordstyle=\color{magenta},
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{purple},
-    basicstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\scriptsize,
     breakatwhitespace=false,         
     breaklines=true,                 
     captionpos=b,                    
@@ -49,6 +41,15 @@
 }
 
 \lstset{style=mystyle}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={Reporte de Practica DevOps UTEQ}
+}
+\g@addto@macro\UrlBreaks{\do\/\do\-\do\_\do\=\do\?\do\&\do\%\do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z}
 
 \begin{document}
 
@@ -260,7 +261,7 @@ jobs:
 \subsection{Infraestructura en la Nube AWS EC2 y Seguridad}
 Se configuró una instancia Ubuntu Server en AWS EC2 (IP Pública \texttt{3.23.64.95}). En el Grupo de Seguridad (\texttt{launch-wizard-1}) se habilitaron las reglas de entrada para los puertos 22 (SSH), 80 (HTTP) y 6061 (TCP Socket).
 
-Para salvaguardar la información sensible, todas las credenciales (\texttt{DOCKER_HUB_USERNAME}, \texttt{DOCKER_HUB_TOKEN}, \texttt{EC2_HOST}, \texttt{EC2_USERNAME} y \texttt{EC2_SSH_KEY}) fueron configuradas en \textbf{GitHub Secrets}, evitando incluir contraseñas o llaves privadas dentro del repositorio público.
+Para salvaguardar la información sensible, todas las credenciales se manejaron con nombres de secretos inmutables: \texttt{DOCKER\_HUB\_USERNAME}, \texttt{DOCKER\_HUB\_TOKEN}, \texttt{EC2\_HOST}, \texttt{EC2\_USERNAME} y \texttt{EC2\_SSH\_KEY}, las cuales fueron configuradas en \textbf{GitHub Secrets}, evitando incluir contraseñas o llaves privadas dentro del repositorio público.
 
 \newpage
 
