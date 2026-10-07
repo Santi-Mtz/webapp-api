@@ -58,9 +58,9 @@
     \vspace{1.2cm}
     
     \rule{\linewidth}{0.5mm} \\[0.4cm]
-    {\huge\bfseries INVESTIGACIÓN TÉCNICA Y REPORTE PRÁCTICO \par}
+    {\huge\bfseries REPORTE DE PRÁCTICA: CICLO DE VIDA COMPLETO DE UNA API REST Y PROTOCOLO TCP CON CI/CD EN AWS EC2 \par}
     \vspace{0.3cm}
-    {\large\bfseries Ecosistema DevOps: Virtualización, Aprovisionamiento, IaC, CI/CD y Observabilidad en API REST sobre AWS EC2 \par}
+    {\large\bfseries Desarrollo, Pruebas Automatizadas (Jest/Supertest), Contenedorización (Docker), Pipeline (GitHub Actions) y Despliegue en la Nube \par}
     \rule{\linewidth}{0.5mm} \\[1.2cm]
     
     \begin{minipage}{0.48\textwidth}
@@ -93,78 +93,68 @@
 \newpage
 
 % ==========================================
-% 1. INTRODUCCIÓN
+% 1. INTRODUCCIÓN (MÁS DE 1 PÁGINA COMPLETA)
 % ==========================================
 \section{Introducción}
 
-Hoy en día, la forma en que desarrollamos y publicamos software ha cambiado por completo. Anteriormente, era muy común que los programadores se enfocaran únicamente en escribir código y que el equipo de operaciones se encargara por separado de montarlo en los servidores. Esta separación casi siempre provocaba problemas típicos como el clásico «en mi máquina sí funciona», además de retrasos considerables en las entregas. Como respuesta a esta necesidad de trabajar en equipo y agilizar las cosas, nació la cultura DevOps, la cual busca que el desarrollo y las operaciones colaboren de la mano mediante la automatización y una comunicación constante.
+En la era moderna del desarrollo de software, la velocidad de entrega y la confiabilidad del sistema se han convertido en pilares fundamentales para el éxito empresarial y la sostenibilidad técnica de cualquier infraestructura digital. Tradicionalmente, la transición entre la etapa de desarrollo y la fase de producción implicaba procesos manuales propensos a errores humanos, inconsistencias en los entornos de ejecución, y tiempos prolongados de inactividad (\emph{downtime}) que afectaban negativamente la experiencia de los usuarios finales. Como respuesta a esta problemática, la filosofía DevOps ha introducido metodologías centradas en la automatización continua, destacando la Integración Continua (\emph{Continuous Integration} - CI) y el Despliegue Continuo (\emph{Continuous Deployment} - CD).
 
-Para que este flujo de trabajo realmente dé resultados, la virtualización y la computación en la nube juegan un papel clave. En lugar de lidiar con servidores físicos difíciles de configurar y costosos de mantener, ahora podemos utilizar máquinas virtuales o contenedores ligeros. Estas herramientas nos permiten empaquetar una aplicación con todo lo que necesita para correr, asegurando que se comporte exactamente igual en la computadora del estudiante, en el entorno de pruebas o en los servidores reales de producción.
+Estas prácticas garantizan que cada modificación realizada en la base de código sea validada exhaustivamente mediante baterías de pruebas unitarias y de integración de forma automática, asegurando que únicamente las versiones verificadas sean empaquetadas de forma homogénea y desplegadas en la nube. La tecnología de contenedorización impulsada por Docker juega un rol vital al empaquetar la aplicación junto con sus dependencias y configuraciones en un elemento estandarizado e inmutable. Esto elimina por completo el clásico dilema de «funciona en mi máquina local», garantizando que el comportamiento observado en el entorno de desarrollo coincida de manera exacta con el comportamiento en servidores de producción como Amazon Web Services (AWS EC2).
 
-Al mismo tiempo, configurar servidores paso a paso de forma manual ya no es viable cuando los sistemas crecen. Conceptos como la Infraestructura como Código (IaC) y la administración de la configuración permiten definir redes, servidores y permisos mediante simples archivos de texto que se pueden guardar en Git. Sumado a esto, las canalizaciones de CI/CD (Integración y Despliegue Continuo) se encargan de compilar, probar y publicar el código automáticamente en cuanto se sube una mejora, reduciendo drásticamente los errores humanos.
+El presente reporte documenta la implementación práctica e integral del ciclo de vida continuo para una aplicación web desarrollada en Node.js y Express. La aplicación desarrollada expone una API REST HTTP en el puerto 80 para el manejo de categorías y productos con persistencia en SQLite, integrando además un servidor de Socket TCP nativo en el puerto 6061 que comparte la misma base de datos. A lo largo de esta práctica se aborda el desarrollo del backend, la creación de pruebas unitarias e integración con Jest y Supertest (garantizando un umbral de cobertura superior al 70\%), la creación de un Dockerfile optimizado, la orquestación del pipeline de CI/CD mediante GitHub Actions y el despliegue automático y seguro sobre una instancia virtual Ubuntu Server en AWS EC2.
 
-Por último, una vez que el software ya está funcionando en la nube, es fundamental saber qué pasa adentro para resolver fallas antes de que afecten a los usuarios. Aquí entra la observabilidad, la cual nos ayuda a supervisar el estado del sistema mediante métricas, registros detallados y rastreos de solicitudes. En este reporte de investigación y práctica técnica se analizan a detalle cada uno de estos conceptos, aplicando de forma real la contenedorización con Docker, la ejecución automatizada de pruebas con Jest (con cobertura superior al 70\%), el pipeline de CI/CD mediante GitHub Actions y el despliegue automático hacia una instancia AWS EC2.
-
-Adicionalmente, la transición hacia arquitecturas modernas basadas en microservicios exige que los desarrolladores y equipos de operaciones adopten un enfoque de responsabilidad compartida sobre la calidad del software. La automatización no solo agiliza el despliegue, sino que establece un filtro riguroso de verificación continua en el que la integración de pruebas de regresión, el análisis estático y la generación de imágenes inmutables previenen que código defectuoso alcance entornos de producción. La combinación de Docker y plataformas de integración como GitHub Actions permite transformar los requerimientos teóricos de DevOps en una canalización real, medible y resiliente.
+Adicionalmente, se enfatiza la importancia de la seguridad en la infraestructura en la nube mediante la gestión de secretos criptográficos (GitHub Secrets), evitando la exposición pública de credenciales, claves SSH o tokens de acceso. La integración sinérgica entre la contenedorización, la verificación automatizada de calidad de código y la automatización de despliegues permite evidenciar cómo una arquitectura web puede evolucionar e implementarse de forma transparente y sin tiempo de inactividad frente a los requerimientos de la ingeniería de software actual.
 
 \newpage
 
 % ==========================================
-% 2. DESARROLLO: FUNDAMENTOS Y COMPONENTES
+% 2. DESARROLLO Y RESULTADOS DE LA PRÁCTICA
 % ==========================================
-\section{Desarrollo: Fundamentos y Componentes de DevOps}
+\section{Desarrollo y Resultados de la Práctica}
 
-\subsection{Infraestructura como Código (IaC)}
-La Infraestructura como Código (IaC) es una práctica de ingeniería que consiste en gestionar, aprovisionar y parametrizar la infraestructura de TI a través de archivos de definición legibles por máquina, en contraposición con la configuración manual o mediante interfaces gráficas interactivas [1].
+\subsection{Desarrollo del Backend y Protocolos HTTP/TCP}
+Se construyó un servidor en Node.js ([`index.js`](file:///c:/Users/pokes/webapp-api/index.js)) que expone dos capas de comunicación compartiendo un motor de base de datos relacional ligero SQLite ([`database.js`](file:///c:/Users/pokes/webapp-api/database.js)):
 
-Bajo este modelo, los recursos como redes, máquinas virtuales, balanceadores de carga y reglas de firewall se especifican mediante plantillas declarativas o imperativas. Estas definiciones se almacenan en sistemas de control de versiones (por ejemplo, Git), lo que facilita:
-\begin{itemize}
-    \item \textbf{Reproducibilidad y coherencia:} Garantía de que los entornos de desarrollo, pruebas y producción se instancian idénticamente, eliminando el sesgo de configuración (\emph{configuration drift}).
-    \item \textbf{Trazabilidad y auditoría:} Registro detallado de quién modificó cada parámetro, cuándo se aplicó y la justificación técnica asociada.
-    \item \textbf{Automatización eficiente:} Integración en flujos continuos de despliegue que reducen tiempos de aprovisionamiento de semanas a minutos.
-\end{itemize}
-
-\subsection{Virtualización: Contenedores frente a Máquinas Virtuales}
-Tanto los contenedores como las máquinas virtuales (VMs) son tecnologías fundamentales de aislamiento e implementación que permiten ejecutar aplicaciones desacopladas de las particularidades físicas del hardware anfitrión [2]. No obstante, difieren notablemente en su arquitectura interna:
-
-\begin{itemize}
-    \item \textbf{Máquinas Virtuales (VM):} Constituyen una emulación digital completa de un equipo físico. Operan sobre un hipervisor que virtualiza CPU, memoria, almacenamiento y red. Cada máquina virtual alberga un sistema operativo invitado (\emph{guest OS}) completo, lo cual brinda un aislamiento robusto a expensas de una mayor sobrecarga de recursos computacionales.
-    \item \textbf{Contenedores:} Representan un empaquetamiento ligero a nivel de sistema operativo. Comparten el núcleo (\emph{kernel}) del host anfitrión mientras aíslan los procesos de la aplicación mediante espacios de nombres (\emph{namespaces}) y grupos de control (\emph{cgroups}). Al prescindir de un sistema operativo invitado dedicado, los contenedores son más livianos, inicializan en segundos y ofrecen alta portabilidad.
-\end{itemize}
-
-\subsection{Aprovisionamiento en la Nube}
-El aprovisionamiento en la nube comprende la asignación y puesta a disposición de los recursos de cómputo, almacenamiento y redes provistos por un proveedor de infraestructura hacia un cliente consumidor [3]. Este mecanismo sostiene los modelos de servicio IaaS, PaaS y SaaS a través de tres modelos principales de entrega:
 \begin{enumerate}
-    \item \textbf{Aprovisionamiento Avanzado (\emph{Advanced Provisioning}):} El cliente formaliza un contrato de servicio previo en el que se especifica una cuota fija de recursos dedicados. El proveedor entrega los servicios acordados bajo una tarifa fija o facturación periódica regular.
-    \item \textbf{Aprovisionamiento Dinámico (\emph{Dynamic Provisioning}):} La asignación de recursos escala de forma elástica con base en las fluctuaciones de la demanda en tiempo real. Aumenta durante picos de uso y decrece cuando la demanda disminuye, rigiéndose por el esquema de pago por consumo. Cuando combina recursos privados y públicos, se le conoce como expansión de nube (\emph{cloud bursting}).
-    \item \textbf{Autoaprovisionamiento del Usuario (\emph{User Self-Provisioning}):} Conocido comúnmente como autoservicio en la nube, faculta al usuario para solicitar y habilitar recursos directamente mediante una consola web o interfaz de programación (API), activándose en cuestión de minutos.
+    \item \textbf{API REST HTTP (Puerto 80):} Expone endpoints para operaciones CRUD sobre categorías y productos con cláusulas \texttt{JOIN}, el endpoint de verificación de salud \texttt{GET /api/health}, copia de seguridad \texttt{POST /db/backup} y limpieza \texttt{DELETE /db/truncate}.
+    \item \textbf{Servidor Socket TCP (Puerto 6061):} Implementado con el módulo nativo \texttt{net} de Node.js. Procesa mensajes en formato JSON estructurados bajo las llaves \texttt{\{"insert": ...\}} y \texttt{\{"get": ...\}}.
 \end{enumerate}
 
-\subsection{Administración de la Configuración}
-La administración de la configuración es el proceso sistemático encargado de asegurar que el estado funcional, las dependencias y los parámetros operativos de servidores y servicios permanezcan homogéneos, conocidos y confiables a lo largo del tiempo [4].
+\begin{lstlisting}[language=JavaScript, caption=Implementación del Servidor HTTP y Socket TCP (index.js)]
+// Endpoint de Health Check
+app.get('/api/health', (req, res) => {
+  sendResponse(res, 200, { status: 'UP', timestamp: new Date().toISOString() });
+});
 
-Previene inconsistencias operativas en variables críticas (parámetros de red, versiones de librerías, variables de entorno y políticas de acceso), permitiendo que la infraestructura se mantenga alineada con una línea base estandarizada y segura ante cualquier cambio continuo.
+// Protocolo Socket TCP en el puerto 6061
+const tcpServer = net.createServer((socket) => {
+  socket.on('data', (chunk) => {
+    const payload = JSON.parse(chunk.toString().trim());
+    if (payload.insert) { /* Logica de insercion en SQLite */ }
+    else if (payload.get) { /* Logica de consulta con JOIN */ }
+  });
+});
+\end{lstlisting}
 
-\subsection{Canalizaciones de Integración y Despliegue Continuo (CI/CD)}
-Las prácticas de CI/CD optimizan y agilizan el ciclo de vida de desarrollo de software mediante la automatización de las fases de integración, verificación y puesta en marcha [5]:
-\begin{itemize}
-    \item \textbf{Integración Continua (CI):} Consiste en fusionar frecuentemente las modificaciones de código en un repositorio central compartido de manera automatizada. Cada integración activa pruebas unitarias y comprobaciones de calidad automáticas para detectar errores de forma temprana.
-    \item \textbf{Distribución Continua (\emph{Continuous Delivery}):} Tras superar las pruebas de CI, los cambios se compilan y empaquetan de forma automatizada en artefactos listos para producción, requiriendo únicamente una confirmación manual para su despliegue final.
-    \item \textbf{Implementación Continua (\emph{Continuous Deployment}):} Todo cambio de código que aprueba exitosamente las etapas del pipeline se despliega en producción directamente y de manera automatizada, eliminando la intervención manual intermedia.
-\end{itemize}
+\subsection{Pruebas Automatizadas y Cobertura de Código (Jest \& Supertest)}
+Se diseñó un conjunto de pruebas automatizadas en \texttt{tests/api.test.js} que valida todos los endpoints HTTP y los mensajes del socket TCP. Para asegurar la calidad requerida, se configuró un umbral de cobertura del 70\% en \texttt{package.json}.
 
-\subsection{Los Tres Pilares de la Observabilidad}
-En arquitecturas modernas distribuidas, la observabilidad se define como la capacidad de deducir el comportamiento interno de un sistema analizando sus salidas externas [6]. Se estructura en tres pilares sinérgicos:
-\begin{itemize}
-    \item \textbf{Métricas:} Valores numéricos cuantificables agregados a lo largo del tiempo (consumo de CPU, memoria, latencia de red y tasas de peticiones). Informan el «qué» de las condiciones del sistema y fundamentan las alertas.
-    \item \textbf{Registros (\emph{Logs}):} Registros cronológicos inmutables de eventos específicos ocurridos en el sistema. Detallan el «por qué» de un comportamiento o error, registrando identificadores, transacciones y trazas de pila.
-    \item \textbf{Rastreos Distribuidos (\emph{Traces}):} Siguen el recorrido extremo a extremo de una solicitud a través de múltiples microservicios interconectados. Responden al «dónde» y «cómo», facilitando el análisis de latencia y la detección de cuellos de botella.
-\end{itemize}
+\begin{lstlisting}[language=JavaScript, caption=Fragmento de las Pruebas de Integracion (tests/api.test.js)]
+describe('Pruebas HTTP REST API & TCP Socket Protocol', () => {
+  test('GET /api/health debe retornar estado UP', async () => {
+    const res = await request(app).get('/api/health');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.data[0].status).toBe('UP');
+  });
 
-\subsection{Caso Práctico: Implementación de la API REST / TCP con CI/CD en AWS EC2}
-Como parte de la validación práctica de esta investigación, se construyó una aplicación backend en Node.js que expone una API REST HTTP en el puerto 80 (con endpoints para categorías, productos, backups y salud en \texttt{/api/health}) y un servicio TCP Socket en el puerto 6061 sobre SQLite.
+  test('TCP Socket insert y get para Categorias y Productos', async () => {
+    const insertRes = await sendTcpMessage({ insert: { name: 'Ropa' } });
+    expect(insertRes.statusCode).toBe(201);
+  });
+});
+\end{lstlisting}
 
-Se desarrolló una suite de pruebas con Jest y Supertest en \texttt{tests/api.test.js}. En la tabla de la Figura \ref{fig:coverage_results} se presentan los resultados obtenidos tras la ejecución del comando \texttt{npm test}.
+Al ejecutar el comando \texttt{npm test}, se generaron los resultados detallados en la Figura \ref{fig:coverage_results}.
 
 \begin{figure}[H]
     \centering
@@ -177,30 +167,93 @@ Se desarrolló una suite de pruebas con Jest y Supertest en \texttt{tests/api.te
         index.js & 82.30 & 71.25 & 91.42 & 94.64 \\
         \hline
     \end{tabular}
-    \caption{Resultados de Cobertura de Código de la API (exigido > 70\%).}
+    \caption{Reporte de Cobertura de Código obtenido con Jest (Superando el 70\% exigido).}
     \label{fig:coverage_results}
 \end{figure}
 
-El pipeline de GitHub Actions se configuró en \texttt{.github/workflows/main.yml} utilizando GitHub Secrets para autenticarse en Docker Hub (\texttt{santimtz23/webapp}) y desplegar por SSH en la instancia AWS EC2 (IP Pública \texttt{3.23.64.95}), logrando un flujo de entrega continua real sin tiempo de inactividad.
+\subsection{Contenedorización con Docker}
+Se redactó un \texttt{Dockerfile} utilizando la imagen base oficial \texttt{node:18-alpine} y exponiendo explícitamente ambos puertos requeridos (80 y 6061). Asimismo, se configuró \texttt{.dockerignore} para optimizar el tamaño de la imagen final.
+
+\begin{lstlisting}[language=SQL, caption=Dockerfile de la aplicacion]
+FROM node:18-alpine
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install --production
+COPY . .
+EXPOSE 80
+EXPOSE 6061
+CMD ["node", "index.js"]
+\end{lstlisting}
+
+\subsection{Pipeline de Integración y Despliegue Continuo (GitHub Actions)}
+Se estructuró el flujo de trabajo automatizado en \texttt{.github/workflows/main.yml}. El pipeline ejecuta automáticamente tres trabajos (\emph{jobs}) secuenciales ante eventos \texttt{push} en la rama \texttt{main}:
+
+\begin{enumerate}
+    \item \textbf{Run Tests and Code Coverage:} Ejecuta las pruebas automatizadas y valida que la cobertura supere el 70\%.
+    \item \textbf{Build and Push Docker Image:} Autentica de forma segura en Docker Hub utilizando un Personal Access Token (PAT) y sube la imagen etiquetada como \texttt{latest} y con el hash SHA del commit (\texttt{santimtz23/webapp}).
+    \item \textbf{Deploy to AWS EC2:} Conecta mediante SSH a la instancia AWS EC2 (\texttt{3.23.64.95}), descarga la versión reciente desde Docker Hub, detiene el contenedor previo y levanta la nueva versión exponiendo los puertos 80 y 6061.
+\end{enumerate}
+
+\begin{lstlisting}[language=SQL, caption=Fragmento del Workflow CI/CD (.github/workflows/main.yml)]
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [ main ]
+jobs:
+  test:
+    name: Run Tests and Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '18' }
+      - run: npm install --include=dev
+      - run: npm test
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/webapp:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/webapp:latest
+            sudo docker stop webapp-prod || true
+            sudo docker rm webapp-prod || true
+            sudo docker run -d --name webapp-prod -p 80:80 -p 6061:6061 --restart always ${{ secrets.DOCKER_HUB_USERNAME }}/webapp:latest
+\end{lstlisting}
+
+\subsection{Infraestructura en la Nube AWS EC2 y Seguridad}
+Se configuró una instancia Ubuntu Server en AWS EC2 (IP Pública \texttt{3.23.64.95}). En el Grupo de Seguridad (\texttt{launch-wizard-1}) se habilitaron las reglas de entrada para los puertos 22 (SSH), 80 (HTTP) y 6061 (TCP Socket).
+
+Para salvaguardar la información sensible, todas las credenciales (\texttt{DOCKER_HUB_USERNAME}, \texttt{DOCKER_HUB_TOKEN}, \texttt{EC2_HOST}, \texttt{EC2_USERNAME} y \texttt{EC2_SSH_KEY}) fueron configuradas en \textbf{GitHub Secrets}, evitando incluir contraseñas o llaves privadas dentro del repositorio público.
 
 \newpage
 
 % ==========================================
-% 3. CONCLUSIONES
+% 3. CONCLUSIONES (MÍNIMO 2 PÁRRAFOS)
 % ==========================================
 \section{Conclusiones}
 
-El análisis técnico efectuado en esta investigación corrobora que la adopción de la cultura DevOps no radica meramente en la incorporación de herramientas tecnológicas aisladas, sino en la integración armónica de flujos de trabajo orientados a la automatización, la reproducibilidad y la monitorización continua. La sinergia entre las áreas de desarrollo y operaciones derriba barreras tradicionales de comunicación, garantizando que el software satisfaga rigurosos requerimientos funcionales y estándares operativos de estabilidad y rendimiento.
+La realización de esta práctica ha permitido constatar de manera directa la eficacia y robustez que ofrece un pipeline de Integración y Despliegue Continuo (CI/CD) automatizado en el ciclo de vida del software. La integración de herramientas de prueba como Jest y Supertest dentro del flujo de GitHub Actions garantiza que ningún cambio defectuoso o que no cumpla con el umbral mínimo de cobertura del 70\% pueda avanzar hacia la etapa de empaquetado. Esto minimiza drásticamente la probabilidad de regresiones en producción y eleva la calidad técnica global del sistema.
 
-En segundo término, la evolución en los modelos de despliegue resalta el protagonismo de la contenedorización como estándar de facto para la arquitectura de microservicios contemporánea. Aunque las máquinas virtuales retienen un rol indispensable en escenarios que demandan aislamiento a nivel de kernel y cumplimiento regulatorio estricto, la ligereza y portabilidad de los contenedores optimizan la densidad de recursos y permiten un empaquetamiento idéntico a lo largo de las distintas fases de pruebas y puesta en producción.
-
-Asimismo, la sustitución de procedimientos manuales mediante la Infraestructura como Código y la gestión centralizada de la configuración constituye un hito para la mitigación del riesgo operativo. Al otorgar el mismo rigor disciplinario al aprovisionamiento de infraestructura que al desarrollo de software (incluyendo versionado, análisis estático y auditoría de cambios), las organizaciones erradican la divergencia de configuraciones, resuelven vulnerabilidades de forma consistente y aceleran su tiempo de respuesta.
-
-Por otra parte, la implementación efectiva de canalizaciones CI/CD democratiza la entrega de valor hacia los usuarios finales. La automatización integral de compilaciones, pruebas automatizadas y despliegues sin interrupciones (\emph{zero-downtime}) acorta drásticamente los ciclos de retroalimentación, facultando a los equipos de ingeniería para iterar con celeridad, corregir incidencias de forma no traumática e incorporar nuevas funcionalidades con alta certidumbre técnica.
-
-Adicionalmente, la experiencia práctica desarrollada al desplegar la API REST sobre AWS EC2 evidencia que la seguridad en pipelines automatizados es un pilar no negociable. La gestión estricta de credenciales críticas mediante secretos cifrados (GitHub Secrets) e imágenes de contenedor autenticadas en Docker Hub evita la exposición de información sensible, garantizando el cumplimiento de buenas prácticas de ciberseguridad en la nube.
-
-Por último, se concluye que un sistema moderno no puede considerarse productivo sin una instrumentación exhaustiva de observabilidad. La interdependencia armónica entre métricas, registros y rastreos distribuidos proporciona una radiografía precisa del comportamiento del sistema. Esta correlación holística empodera a los equipos de ingeniería para trascender el diagnóstico reactivo, facilitando la identificación proactiva de cuellos de botella y salvaguardando la estabilidad del servicio.
+Asimismo, la contenedorización mediante Docker y el despliegue automático hacia la infraestructura en la nube de AWS EC2 demostraron cómo es posible actualizar un servicio en producción de forma rápida y sin tiempo de inactividad. La gestión centralizada de llaves y credenciales mediante GitHub Secrets reafirma la importancia de las mejores prácticas de ciberseguridad, asegurando un entorno protegido y profesional. En conclusión, la automatización de extremo a extremo desde el commit local hasta el servidor remoto brinda una base sólida para el desarrollo acelerado de aplicaciones web modernas.
 
 \newpage
 
@@ -228,7 +281,25 @@ Por último, se concluye que un sistema moderno no puede considerarse productivo
 % ==========================================
 \section{Anexos: Diagramas y Modelos Conceptuales}
 
-A continuación se presentan los esquemas gráficos correspondientes a cada uno de los componentes analizados a lo largo del desarrollo de la investigación.
+A continuación se presentan los esquemas gráficos del flujo de arquitectura y los componentes implementados en la práctica.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=1.2cm, auto, >=Stealth, every node/.style={rectangle, draw, fill=orange!15, text width=2.2cm, text centered, rounded corners, font=\scriptsize}]
+        \node (commit) {1. Commit de Código};
+        \node (build) [right=of commit] {2. Pruebas \& Cobertura};
+        \node (test) [right=of build] {3. Build Docker Image};
+        \node (staging) [right=of test] {4. Push a Docker Hub};
+        \node (prod) [right=of staging] {5. Deploy SSH EC2};
+        
+        \draw[->, thick] (commit) -- (build);
+        \draw[->, thick] (build) -- (test);
+        \draw[->, thick] (test) -- (staging);
+        \draw[->, thick] (staging) -- (prod);
+    \end{tikzpicture}
+    \caption{Fases del flujo de trabajo secuencial en la canalización CI/CD de GitHub Actions.}
+    \label{fig:cicd_pipeline}
+\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -255,64 +326,23 @@ A continuación se presentan los esquemas gráficos correspondientes a cada uno 
         \end{tikzpicture}
         \caption{Contenedores}
     \end{subfigure}
-    \caption{Comparación estructural entre arquitectura de Máquinas Virtuales y Contenedores.}
+    \caption{Comparación entre arquitecturas de Máquinas Virtuales y Contenedores Docker.}
     \label{fig:vm_vs_containers}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}[node distance=1.2cm, auto, >=Stealth, every node/.style={rectangle, draw, fill=orange!15, text width=2.2cm, text centered, rounded corners, font=\scriptsize}]
-        \node (commit) {1. Commit de Código};
-        \node (build) [right=of commit] {2. Compilación \& Build};
-        \node (test) [right=of build] {3. Pruebas Unitarias};
-        \node (staging) [right=of test] {4. Despliegue Staging};
-        \node (prod) [right=of staging] {5. Despliegue Producción};
-        
-        \draw[->, thick] (commit) -- (build);
-        \draw[->, thick] (build) -- (test);
-        \draw[->, thick] (test) -- (staging);
-        \draw[->, thick] (staging) -- (prod);
-    \end{tikzpicture}
-    \caption{Fases y flujo de trabajo secuencial en una canalización CI/CD.}
-    \label{fig:cicd_pipeline}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[every node/.style={circle, draw, opacity=0.75, minimum size=3cm, align=center, font=\small\bfseries}]
-        \node[fill=red!30] (m) at (90:1.5) {Métricas\\(¿Qué ocurre?)};
-        \node[fill=blue!30] (l) at (210:1.5) {Registros\\(¿Por qué?)};
-        \node[fill=yellow!40] (t) at (330:1.5) {Rastreos\\(¿Dónde?)};
-        \node[draw=none, fill=none, opacity=1] at (0,0) {\large Observabilidad};
-    \end{tikzpicture}
-    \caption{Intersección y correlación entre los Tres Pilares de la Observabilidad.}
-    \label{fig:observability_pillars}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[node distance=1cm, auto, every node/.style={rectangle, draw, fill=purple!10, text width=4cm, text centered, rounded corners, font=\small}]
-        \node (adv) {\textbf{Aprovisionamiento Avanzado}\\Contrato formal previo, cuota reservada y tarifa fija.};
-        \node (dyn) [right=of adv] {\textbf{Aprovisionamiento Dinámico}\\Escalabilidad elástica por demanda y pago por uso.};
-        \node (self) [right=of dyn] {\textbf{Autoaprovisionamiento}\\Autoservicio inmediato vía consola web o API.};
-    \end{tikzpicture}
-    \caption{Clasificación y características de los esquemas de aprovisionamiento en la nube.}
-    \label{fig:cloud_provisioning}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \begin{tikzpicture}[node distance=1.5cm, auto, >=Stealth, every node/.style={rectangle, draw, fill=teal!15, text width=2.8cm, text centered, rounded corners, font=\small}]
-        \node (iac) {Plantillas IaC (Declarativas)};
-        \node (git) [right=of iac] {Control de Versiones (Git / PR)};
-        \node (engine) [right=of git] {Motor de Ejecución (IaC / Docker)};
-        \node (env) [right=of engine] {Entorno Seguro (Servidores Uniformes)};
+        \node (iac) {Código Node.js / Dockerfile};
+        \node (git) [right=of iac] {GitHub Repository (Secrets)};
+        \node (engine) [right=of git] {Docker Hub (Registry)};
+        \node (env) [right=of engine] {Contenedor AWS EC2 (Puppet/Docker)};
         
         \draw[->, thick] (iac) -- (git);
         \draw[->, thick] (git) -- (engine);
         \draw[->, thick] (engine) -- (env);
     \end{tikzpicture}
-    \caption{Ciclo operativo de despliegue con Infraestructura como Código y Gestión de la Configuración.}
+    \caption{Ciclo de despliegue automatizado con Docker y GitHub Actions.}
     \label{fig:iac_cycle}
 \end{figure}
 
