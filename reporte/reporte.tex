@@ -258,7 +258,16 @@ jobs:
 \end{lstlisting}
 
 \subsection{Verificación y Validación del Despliegue en Vivo}
-El funcionamiento continuo y automatizado del pipeline puede ser comprobado directamente en la consola de GitHub Actions y mediante la consulta de los endpoints públicos. Al realizar cualquier modificación en la base de código del repositorio y enviarla a la rama principal, la canalización de CI/CD ejecuta secuencialmente la validación de pruebas unitarias, el empaquetado del contenedor y la actualización del servidor en la nube AWS EC2 (\url{http://3.23.64.95/api/health}), evidenciando un ciclo de despliegue automatizado sin tiempo de inactividad.
+El funcionamiento continuo y automatizado del pipeline puede ser comprobado directamente en la consola de GitHub Actions y mediante la consulta de los endpoints públicos. Al realizar cualquier modificación en la base de código del repositorio y enviarla a la rama principal, la canalización de CI/CD ejecuta secuencialmente la validación de pruebas unitarias, el empaquetado del contenedor y la actualización del servidor en la nube AWS EC2.
+
+En la Figura \ref{fig:api_health_response} se observa la respuesta satisfactoria en formato JSON con código de estado 200 enviada por la API REST desplegada en la IP pública de la instancia AWS EC2.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{api_health_response.png}
+    \caption{Respuesta satisfactoria del endpoint GET /api/health desplegado en la instancia AWS EC2.}
+    \label{fig:api_health_response}
+\end{figure}
 
 \newpage
 
