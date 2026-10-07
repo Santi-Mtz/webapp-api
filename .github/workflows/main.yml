@@ -21,7 +21,7 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install --include=dev
 
       - name: Run Tests & Check Coverage Threshold
         run: npm test
