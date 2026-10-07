@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: 🧪 Run Tests & Code Coverage
+    name: Run Tests and Code Coverage
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install
@@ -28,7 +27,7 @@ jobs:
         run: npm test
 
   build-and-push:
-    name: 🐳 Build & Push Docker Image
+    name: Build and Push Docker Image
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -60,7 +59,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
   deploy:
-    name: 🚀 Deploy to AWS EC2
+    name: Deploy to AWS EC2
     needs: build-and-push
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'

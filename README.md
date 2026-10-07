@@ -1,10 +1,10 @@
-# 🚀 WebApp API REST & TCP Socket Server
+# WebApp API REST & TCP Socket Server
 
 Aplicación Web Node.js que expone una API REST HTTP en el puerto 80 y un protocolo de socket TCP en el puerto 6061 con persistencia en SQLite. Incluye pruebas automatizadas con reporte de cobertura, contenedorización optimizada en Docker y despliegue continuo (CI/CD) automático hacia AWS EC2 mediante GitHub Actions.
 
 ---
 
-## 📐 Arquitectura del Sistema
+## Arquitectura del Sistema
 
 ```
                       +-------------------+
@@ -36,7 +36,7 @@ Aplicación Web Node.js que expone una API REST HTTP en el puerto 80 y un protoc
 
 ---
 
-## 🛠️ Requisitos e Instalación Local
+## Requisitos e Instalación Local
 
 ### Prerrequisitos
 - Node.js v18+
@@ -63,7 +63,7 @@ Aplicación Web Node.js que expone una API REST HTTP en el puerto 80 y un protoc
 
 ---
 
-## 📡 Endpoints de la API REST (Puerto 80)
+## Endpoints de la API REST (Puerto 80)
 
 | Método | Ruta | Descripción |
 | :--- | :--- | :--- |
@@ -81,7 +81,7 @@ Aplicación Web Node.js que expone una API REST HTTP en el puerto 80 y un protoc
 
 ---
 
-## 🔌 Protocolo Socket TCP (Puerto 6061)
+## Protocolo Socket TCP (Puerto 6061)
 
 Admite mensajes en formato JSON:
 
@@ -99,7 +99,7 @@ Admite mensajes en formato JSON:
 
 ---
 
-## 🔐 Configuración de Secretos en GitHub (GitHub Secrets)
+## Configuración de Secretos en GitHub (GitHub Secrets)
 
 Para que el pipeline de GitHub Actions se ejecute correctamente y despliegue en la instancia EC2 de AWS, es necesario configurar los siguientes **Repository Secrets** en GitHub (`Settings` > `Secrets and variables` > `Actions`):
 
@@ -113,7 +113,7 @@ Para que el pipeline de GitHub Actions se ejecute correctamente y despliegue en 
 
 ---
 
-## 🐳 Comandos Docker Manuales
+## Comandos Docker Manuales
 
 1. **Construir imagen:**
    ```bash
