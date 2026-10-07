@@ -357,18 +357,9 @@ A continuación se presentan los esquemas gráficos del flujo de arquitectura y 
 
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}[node distance=1.5cm, auto, >=Stealth, every node/.style={rectangle, draw, fill=teal!15, text width=2.8cm, text centered, rounded corners, font=\small}]
-        \node (iac) {Código Node.js / Dockerfile};
-        \node (git) [right=of iac] {GitHub Repository (Secrets)};
-        \node (engine) [right=of git] {Docker Hub (Registry)};
-        \node (env) [right=of engine] {Contenedor AWS EC2 (Puppet/Docker)};
-        
-        \draw[->, thick] (iac) -- (git);
-        \draw[->, thick] (git) -- (engine);
-        \draw[->, thick] (engine) -- (env);
-    \end{tikzpicture}
-    \caption{Ciclo de despliegue automatizado con Docker y GitHub Actions.}
-    \label{fig:iac_cycle}
+    \includegraphics[width=0.95\linewidth]{actions_list.png}
+    \caption{Historial de ejecuciones registradas en la consola de GitHub Actions para la canalización CI/CD.}
+    \label{fig:actions_list_screenshot}
 \end{figure}
 
 \end{document}
