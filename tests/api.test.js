@@ -4,20 +4,27 @@ const { app, tcpServer } = require('../index');
 const { db } = require('../database');
 
 let serverInstance;
-const TEST_TCP_PORT = 6062;
+let TEST_TCP_PORT = 0;
 
 beforeAll((done) => {
-  serverInstance = tcpServer.listen(TEST_TCP_PORT, '127.0.0.1', () => {
+  serverInstance = tcpServer.listen(0, '0.0.0.0', () => {
+    TEST_TCP_PORT = serverInstance.address().port;
     done();
   });
 });
 
 afterAll((done) => {
-  serverInstance.close(() => {
+  if (serverInstance && serverInstance.listening) {
+    serverInstance.close(() => {
+      db.close(() => {
+        done();
+      });
+    });
+  } else {
     db.close(() => {
       done();
     });
-  });
+  }
 });
 
 beforeEach((done) => {
