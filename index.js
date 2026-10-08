@@ -16,7 +16,7 @@ const sendResponse = (res, statusCode, data) => {
 
 // 0. HEALTH CHECK ENDPOINT
 app.get('/api/health', (req, res) => {
-  sendResponse(res, 200, { status: 'UP', timestamp: new Date().toISOString() });
+  sendResponse(res, 201, { status: 'UP downs', timestamp: new Date().toISOString() });
 });
 
 // 1. ENDPOINTS HTTP (EXPRESS - PUERTO 80)
@@ -40,7 +40,7 @@ app.get('/categories/:id', (req, res) => {
 // 3. POST /categories - Crear categoría
 app.post('/categories', (req, res) => {
   const { name } = req.body;
-  db.run('INSERT INTO categories (name) VALUES (?)', [name], function(err) {
+  db.run('INSERT INTO categories (name) VALUES (?)', [name], function (err) {
     if (err) return sendResponse(res, 500, { error: err.message });
     sendResponse(res, 201, [{ id: this.lastID, name }]);
   });
@@ -48,7 +48,7 @@ app.post('/categories', (req, res) => {
 
 // 4. DELETE /categories/:id - Eliminar categoría
 app.delete('/categories/:id', (req, res) => {
-  db.run('DELETE FROM categories WHERE id = ?', [req.params.id], function(err) {
+  db.run('DELETE FROM categories WHERE id = ?', [req.params.id], function (err) {
     if (err) return sendResponse(res, 500, { error: err.message });
     sendResponse(res, 200, [{ deletedId: req.params.id, changes: this.changes }]);
   });
@@ -75,7 +75,7 @@ app.get('/products/:id', (req, res) => {
 // 7. POST /products - Crear producto
 app.post('/products', (req, res) => {
   const { name, price, category_id } = req.body;
-  db.run('INSERT INTO products (name, price, category_id) VALUES (?, ?, ?)', [name, price, category_id], function(err) {
+  db.run('INSERT INTO products (name, price, category_id) VALUES (?, ?, ?)', [name, price, category_id], function (err) {
     if (err) return sendResponse(res, 500, { error: err.message });
     sendResponse(res, 201, [{ id: this.lastID, name, price, category_id }]);
   });
@@ -83,7 +83,7 @@ app.post('/products', (req, res) => {
 
 // 8. DELETE /products/:id - Eliminar producto
 app.delete('/products/:id', (req, res) => {
-  db.run('DELETE FROM products WHERE id = ?', [req.params.id], function(err) {
+  db.run('DELETE FROM products WHERE id = ?', [req.params.id], function (err) {
     if (err) return sendResponse(res, 500, { error: err.message });
     sendResponse(res, 200, [{ deletedId: req.params.id, changes: this.changes }]);
   });
@@ -141,7 +141,7 @@ const tcpServer = net.createServer((socket) => {
 
         // Inserción de Categoría: {"insert": {"name": "..."}}
         if (el.name && !el.price && !el.category_id) {
-          db.run('INSERT INTO categories (name) VALUES (?)', [el.name], function(err) {
+          db.run('INSERT INTO categories (name) VALUES (?)', [el.name], function (err) {
             if (err) return sendSocket(socket, 500, { error: err.message });
             sendSocket(socket, 201, [{ id: this.lastID, name: el.name }]);
           });
@@ -151,7 +151,7 @@ const tcpServer = net.createServer((socket) => {
           db.run(
             'INSERT INTO products (name, price, category_id) VALUES (?, ?, ?)',
             [el.name, el.price, el.category_id],
-            function(err) {
+            function (err) {
               if (err) return sendSocket(socket, 500, { error: err.message });
               sendSocket(socket, 201, [{ id: this.lastID, name: el.name, price: el.price, category_id: el.category_id }]);
             }
@@ -198,7 +198,7 @@ const tcpServer = net.createServer((socket) => {
         } else {
           sendSocket(socket, 400, { error: 'Tipo de recurso no soportado en get (use "category" o "product")' });
         }
-      } 
+      }
       else {
         sendSocket(socket, 400, { error: 'Protocolo invalido. El objeto raíz debe tener "insert" o "get"' });
       }
