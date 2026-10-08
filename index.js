@@ -16,7 +16,7 @@ const sendResponse = (res, statusCode, data) => {
 
 // 0. HEALTH CHECK ENDPOINT
 app.get('/api/health', (req, res) => {
-  sendResponse(res, 200, { status: 'UP0', timestamp: new Date().toISOString() });
+  sendResponse(res, 200, { status: 'UP', timestamp: new Date().toISOString() });
 });
 
 // 1. ENDPOINTS HTTP (EXPRESS - PUERTO 80)
