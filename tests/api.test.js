@@ -64,8 +64,8 @@ describe('Pruebas HTTP REST API & TCP Socket Protocol', () => {
   // 1. Health Check
   test('GET /api/health debe retornar estado UP', async () => {
     const res = await request(app).get('/api/health');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.data[0].status).toBe('UP');
+    expect(res.statusCode).toEqual(201);
+    expect(res.body.data[0].status).toBe('UP downs');
   });
 
   // 2. HTTP Categorías CRUD
